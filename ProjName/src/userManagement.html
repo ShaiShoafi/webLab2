@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>User Management</title>
+  <style>
+    body { margin: 0 auto; max-width: 58rem; padding: 2rem 1rem; font-family: Inter, sans-serif; color: #182b39; }
+    section { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    caption { text-align: left; font-weight: bold; padding: 1rem 0; }
+    th, td { text-align: left; padding: .75rem; border-bottom: 1px solid #d4dfe4; }
+    th { background: #edf5f5; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1 id="welcome">Welcome</h1>
+    <p id="message"></p>
+    <section id="directory" hidden>
+      <table>
+        <caption>Registered users</caption>
+        <thead><tr><th>Username</th><th>Email</th><th>Date of birth</th><th>Role</th></tr></thead>
+        <tbody id="userRows"></tbody>
+      </table>
+    </section>
+  </main>
+  <script>
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const message = document.getElementById('message');
+
+    if (currentUser && currentUser.username) {
+      document.getElementById('welcome').textContent = 'Welcome ' + currentUser.username;
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const rows = document.getElementById('userRows');
+      document.getElementById('directory').hidden = false;
+
+      for (const user of users) {
+        const row = rows.insertRow();
+        for (const value of [user.username, user.email, user.dob, user.role]) {
+          row.insertCell().textContent = value || '—';
+        }
+      }
+      if (users.length === 0) {
+        message.textContent = 'No registered users.';
+      }
+    } else {
+      message.textContent = 'Please log in to view registered users.';
+    }
+  </script>
+</body>
+</html>
